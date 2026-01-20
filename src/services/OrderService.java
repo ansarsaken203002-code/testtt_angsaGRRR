@@ -8,8 +8,8 @@ import java.util.Scanner;
 
 public class OrderService {
 
-    private ArrayList<Order> orders = new ArrayList<>();
-    private Scanner sc;
+    private final ArrayList<Order> orders = new ArrayList<>();
+    private final Scanner sc;
 
     public OrderService(Scanner sc){
         this.sc = sc;
@@ -21,7 +21,6 @@ public class OrderService {
 
         while(answer.equalsIgnoreCase("Y")){
 
-
             itemService.showItems();
 
             System.out.print("Enter item id: ");
@@ -31,23 +30,30 @@ public class OrderService {
             int q = sc.nextInt();
 
             Item item = itemService.findById(id);
-            if(item == null || q > item.quantity){
+            if(item == null || q > item.getQuantity()){
                 System.out.println("Error: item not found or not enough quantity");
                 continue;
             }
 
-            item.quantity -= q;
-            double total = item.price * q;
-            orders.add(new Order(item.name, q, total));
+            item.decreaseQuantity(q);
+            double total = item.getPrice() * q;
+            orders.add(new Order(item.getName(), q, total));
 
-            System.out.println("Added " + item.name + " x" + q + " Price: " + total);
+            System.out.println("Added " + item.getName() + " x" + q + " Price: " + total);
+
             System.out.print("Continue? (Y/N): ");
             answer = sc.next();
 
             if(answer.equalsIgnoreCase("N")){
                 double sum = 0;
                 for(int i = startIndex; i < orders.size(); i++){
-                    sum += orders.get(i).totalPrice;
+                    sum += orders.get(i).getTotalPrice();
+                }
+
+                if(sum > 5000){
+                    double discount = sum * 0.05;
+                    sum -= discount;
+                    System.out.println("Discount applied: " + discount);
                 }
 
                 System.out.println("Total order sum: " + sum);
@@ -57,9 +63,9 @@ public class OrderService {
                 if(confirm.equalsIgnoreCase("N")){
                     while(orders.size() > startIndex){
                         Order o = orders.remove(orders.size() - 1);
-                        Item it = itemService.findByName(o.itemName);
+                        Item it = itemService.findByName(o.getItemName());
                         if(it != null){
-                            it.quantity += o.quantity;
+                            it.increaseQuantity(o.getQuantity());
                         }
                     }
                     System.out.println("Order canceled");
@@ -67,7 +73,6 @@ public class OrderService {
                     System.out.println("Order confirmed");
                 }
             }
-
         }
     }
 
@@ -77,7 +82,11 @@ public class OrderService {
             return;
         }
         for(Order o : orders){
-            System.out.println(o.itemName + " x" + o.quantity + " = " + o.totalPrice);
+            System.out.println(
+                    o.getItemName() + " x" +
+                            o.getQuantity() + " = " +
+                            o.getTotalPrice()
+            );
         }
     }
 
@@ -87,11 +96,11 @@ public class OrderService {
             return;
         }
         Order last = orders.remove(orders.size() - 1);
-        Item item = itemService.findByName(last.itemName);
+        Item item = itemService.findByName(last.getItemName());
         if(item != null){
-            item.quantity += last.quantity;
+            item.increaseQuantity(last.getQuantity());
         }
-        System.out.println("Last order canceled: " + last.itemName);
+        System.out.println("Last order canceled: " + last.getItemName());
     }
 
     public ArrayList<Order> getOrders(){

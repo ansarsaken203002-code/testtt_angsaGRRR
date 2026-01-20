@@ -13,20 +13,25 @@ public class ItemService {
 
     public void showItems(){
         for(Item i : items){
-            System.out.println(i.id + " " + i.name + " " + i.price + " " + i.quantity);
+            System.out.println(
+                    i.getId() + " " +
+                            i.getName() + " " +
+                            i.getPrice() + " " +
+                            i.getQuantity()
+            );
         }
     }
 
     public Item findById(int id){
         for(Item i : items){
-            if(i.id == id) return i;
+            if(i.getId() == id) return i;
         }
         return null;
     }
 
     public Item findByName(String name){
         for(Item i : items){
-            if(i.name.equals(name)) return i;
+            if(i.getName().equals(name)) return i;
         }
         return null;
     }

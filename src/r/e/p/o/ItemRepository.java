@@ -33,7 +33,7 @@ public class ItemRepository {
         Statement st = con.createStatement();
         for(Item i : items){
             st.executeUpdate(
-                    "UPDATE school_items SET quantity = " + i.quantity + " WHERE id = " + i.id
+                    "UPDATE school_items SET quantity = " + i.getQuantity() + " WHERE id = " + i.getId()
             );
         }
         st.close();

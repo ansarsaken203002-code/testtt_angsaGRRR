@@ -14,7 +14,7 @@ public class OrderRepository {
         for(Order o : orders){
             st.executeUpdate(
                     "INSERT INTO orders (item_name, quantity, total_price) VALUES (" +
-                            "'" + o.itemName + "', " + o.quantity + ", " + o.totalPrice + ")"
+                            "'" + o.getItemName() + "', " + o.getQuantity() + ", " + o.getTotalPrice() + ")"
             );
         }
         st.close();
