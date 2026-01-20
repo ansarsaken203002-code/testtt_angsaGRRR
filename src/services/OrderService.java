@@ -16,8 +16,11 @@ public class OrderService {
     }
 
     public void makeOrder(ItemService itemService){
+        int startIndex = orders.size();
         String answer = "Y";
+
         while(answer.equalsIgnoreCase("Y")){
+
 
             itemService.showItems();
 
@@ -40,6 +43,31 @@ public class OrderService {
             System.out.println("Added " + item.name + " x" + q + " Price: " + total);
             System.out.print("Continue? (Y/N): ");
             answer = sc.next();
+
+            if(answer.equalsIgnoreCase("N")){
+                double sum = 0;
+                for(int i = startIndex; i < orders.size(); i++){
+                    sum += orders.get(i).totalPrice;
+                }
+
+                System.out.println("Total order sum: " + sum);
+                System.out.print("Confirm order? (Y/N): ");
+                String confirm = sc.next();
+
+                if(confirm.equalsIgnoreCase("N")){
+                    while(orders.size() > startIndex){
+                        Order o = orders.remove(orders.size() - 1);
+                        Item it = itemService.findByName(o.itemName);
+                        if(it != null){
+                            it.quantity += o.quantity;
+                        }
+                    }
+                    System.out.println("Order canceled");
+                } else {
+                    System.out.println("Order confirmed");
+                }
+            }
+
         }
     }
 
