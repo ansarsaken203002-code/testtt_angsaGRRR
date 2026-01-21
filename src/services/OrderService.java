@@ -30,8 +30,13 @@ public class OrderService {
             int q = sc.nextInt();
 
             Item item = itemService.findById(id);
-            if(item == null || q > item.getQuantity()){
-                System.out.println("Error: item not found or not enough quantity");
+            if (item == null) {
+                System.out.println("Item not found");
+                continue;
+            }
+
+            if (q > item.getQuantity()) {
+                System.out.println("Not enough quantity");
                 continue;
             }
 
