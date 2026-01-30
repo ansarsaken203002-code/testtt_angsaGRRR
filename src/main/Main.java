@@ -12,14 +12,14 @@ import modeli.Item;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) { //Проверить, мб функции добавить
 
-        Scanner sc = new Scanner(System.in);
+        Scanner scannirui = new Scanner(System.in);
 
         System.out.print("Login: ");
-        String login = sc.nextLine();
+        String login = scannirui.nextLine();
         System.out.print("Password: ");
-        String pass = sc.nextLine();
+        String pass = scannirui.nextLine();
 
         AdminService admin = new AdminService();
 
@@ -35,7 +35,7 @@ public class Main {
             ArrayList<Item> items = itemRepo.loadItems();
             ItemService itemService = new ItemService(items);
 
-            OrderService orderService = new OrderService(sc);
+            OrderService orderService = new OrderService(scannirui);
             OrderRepository orderRepo = new OrderRepository();
 
             int choice = -1;
@@ -46,7 +46,7 @@ public class Main {
                 System.out.println("4 - Cancel last order");
                 System.out.println("0 - Exit");
 
-                choice = sc.nextInt();
+                choice = scannirui.nextInt();
 
                 if(choice == 1) orderService.makeOrder(itemService);
                 if(choice == 2) itemService.showItems();

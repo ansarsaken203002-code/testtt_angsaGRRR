@@ -11,9 +11,9 @@ public class ItemRepository {
 
     public ArrayList<Item> loadItems() throws Exception {
         ArrayList<Item> items = new ArrayList<>();
-        Connection con = DBConnection.getConnection();
-        Statement st = con.createStatement();
-        ResultSet rs = st.executeQuery("SELECT * FROM school_items ORDER BY id");
+        Connection connek = DBConnection.getConnection();
+        Statement stata = connek.createStatement();
+        ResultSet rs = stata.executeQuery("SELECT * FROM school_items ORDER BY id");
         while(rs.next()){
             items.add(new Item(
                     rs.getInt("id"),
@@ -23,20 +23,20 @@ public class ItemRepository {
             ));
         }
         rs.close();
-        st.close();
-        con.close();
+        stata.close();
+        connek.close();
         return items;
     }
 
     public void saveItems(ArrayList<Item> items) throws Exception {
-        Connection con = DBConnection.getConnection();
-        Statement st = con.createStatement();
+        Connection connek = DBConnection.getConnection();
+        Statement stata = connek.createStatement();
         for(Item i : items){
-            st.executeUpdate(
+            stata.executeUpdate(
                     "UPDATE school_items SET quantity = " + i.getQuantity() + " WHERE id = " + i.getId()
             );
         }
-        st.close();
-        con.close();
+        stata.close();
+        connek.close();
     }
 }
