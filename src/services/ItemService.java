@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class ItemService {
 
-    private ArrayList<Item> items;
+    private final ArrayList<Item> items;
 
     public ItemService(ArrayList<Item> items){
         this.items = items;
