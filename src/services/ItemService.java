@@ -12,15 +12,16 @@ public class ItemService {
     }
 
     public void showItems(){
-        for(Item i : items){
-            System.out.println(
-                    i.getId() + " " +
-                            i.getName() + " " +
-                            i.getPrice() + " " +
-                            i.getQuantity()
-            );
-        }
+        items.forEach(i ->
+                System.out.println(
+                        i.getId() + " " +
+                                i.getName() + " " +
+                                i.getPrice() + " " +
+                                i.getQuantity()
+                )
+        );
     }
+
 
     public Item findById(int id){
         for(Item i : items){
