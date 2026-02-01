@@ -29,6 +29,12 @@ public class OrderService {
             System.out.print("Enter quantity: ");
             int q = sc.nextInt();
 
+            if (q <= 0) {
+                System.out.println("Quantity must be positive");
+                continue;
+            }
+
+
             Item item = itemService.findById(id);
             if (item == null) {
                 System.out.println("Item not found");
