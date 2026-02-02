@@ -1,7 +1,7 @@
-package modeli;
+package models;
 
 public class Order {
-
+    private int id;
     private String itemName;
     private int quantity;
     private double totalPrice;
@@ -10,6 +10,15 @@ public class Order {
         this.itemName = itemName;
         this.quantity = quantity;
         this.totalPrice = totalPrice;
+    }
+
+    public Order(int id, String itemName, int quantity, double totalPrice){
+        this(itemName, quantity, totalPrice);
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getItemName(){

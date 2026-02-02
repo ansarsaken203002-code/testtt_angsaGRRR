@@ -1,120 +1,38 @@
 package services;
 
-import modeli.Item;
-import modeli.Order;
+import models.Item;
+import models.Order;
+import repositories.ItemRepository;
+import repositories.OrderRepository;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class OrderService {
+    private final OrderRepository repo;
+    private final ItemRepository itemRepo;
 
-    private final ArrayList<Order> orders = new ArrayList<>();
-    private final Scanner sc;
-
-    public OrderService(Scanner sc){
-        this.sc = sc;
+    public OrderService(OrderRepository repo, ItemRepository itemRepo){
+        this.repo = repo;
+        this.itemRepo = itemRepo;
     }
 
-    public void makeOrder(ItemService itemService){
-        int startIndex = orders.size();
-        String answer = "Y";
+    public void makeOrder(List<Order> orders) throws Exception {
+        repo.saveOrders(orders);
 
-        while(answer.equalsIgnoreCase("Y")){
+        List<Item> items = new ArrayList<>();
+        for (Order order : orders) {
+            Item item = itemRepo.getItemByName(order.getItemName());
 
-            itemService.showItems();
-
-            System.out.print("Enter item id: ");
-            int id = sc.nextInt();
-
-            System.out.print("Enter quantity: ");
-            int q = sc.nextInt();
-
-            if (q <= 0) {
-                System.out.println("Quantity must be positive");
-                continue;
-            }
-
-
-            Item item = itemService.findById(id);
-            if (item == null) {
-                System.out.println("Item not found");
-                continue;
-            }
-
-            if (q > item.getQuantity()) {
-                System.out.println("Not enough quantity");
-                continue;
-            }
-
-            item.decreaseQuantity(q);
-            double total = item.getPrice() * q;
-            orders.add(new Order(item.getName(), q, total));
-
-            System.out.println("Added " + item.getName() + " x" + q + " Price: " + total);
-
-            System.out.print("Continue? (Y/N): ");
-            answer = sc.next();
-
-            if(answer.equalsIgnoreCase("N")){
-                double sum = 0;
-                for(int i = startIndex; i < orders.size(); i++){
-                    sum += orders.get(i).getTotalPrice();
-                }
-
-                if(sum > 5000){
-                    double discount = sum * 0.05;
-                    sum -= discount;
-                    System.out.println("Discount applied: " + discount);
-                }
-
-                System.out.println("Total order sum: " + sum);
-                System.out.print("Confirm order? (Y/N): ");
-                String confirm = sc.next();
-
-                if(confirm.equalsIgnoreCase("N")){
-                    while(orders.size() > startIndex){
-                        Order o = orders.remove(orders.size() - 1);
-                        Item it = itemService.findByName(o.getItemName());
-                        if(it != null){
-                            it.increaseQuantity(o.getQuantity());
-                        }
-                    }
-                    System.out.println("Order canceled");
-                } else {
-                    System.out.println("Order confirmed");
-                }
-            }
+            item.decreaseQuantity(order.getQuantity());
+            items.add(item);
         }
+
+        itemRepo.saveItems(items);
     }
 
-    public void showOrders(){
-        if(orders.isEmpty()){
-            System.out.println("No orders yet.");
-            return;
-        }
-        for(Order o : orders){
-            System.out.println(
-                    o.getItemName() + " x" +
-                            o.getQuantity() + " = " +
-                            o.getTotalPrice()
-            );
-        }
-    }
-
-    public void cancelLast(ItemService itemService){
-        if(orders.isEmpty()){
-            System.out.println("No orders to cancel.");
-            return;
-        }
-        Order last = orders.remove(orders.size() - 1);
-        Item item = itemService.findByName(last.getItemName());
-        if(item != null){
-            item.increaseQuantity(last.getQuantity());
-        }
-        System.out.println("Last order canceled: " + last.getItemName());
-    }
-
-    public ArrayList<Order> getOrders(){
-        return orders;
+    public List<Order> getOrders() throws Exception {
+        return repo.getOrders();
     }
 }

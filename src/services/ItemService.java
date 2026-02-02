@@ -1,44 +1,26 @@
 package services;
 
-import modeli.Item;
-import java.util.ArrayList;
+import models.Item;
+import repositories.interfaces.ItemRepositoryInterface;
+
+import java.util.List;
 
 public class ItemService {
+    private final ItemRepositoryInterface repo;
 
-    private final ArrayList<Item> items;
-
-    public ItemService(ArrayList<Item> items){
-        this.items = items;
+    public ItemService(ItemRepositoryInterface repo){
+        this.repo = repo;
     }
 
-    public void showItems(){
-        items.forEach(i ->
-                System.out.println(
-                        i.getId() + " " +
-                                i.getName() + " " +
-                                i.getPrice() + " " +
-                                i.getQuantity()
-                )
-        );
+    public List<Item> getItems() throws Exception {
+        return repo.loadItems();
     }
 
-
-
-    public Item findById(int id){
-        for(Item i : items){
-            if(i.getId() == id) return i;
-        }
-        return null;
+    public Item findById(int id) throws Exception {
+        return repo.getItemByID(id);
     }
 
-    public Item findByName(String name){
-        for(Item i : items){
-            if(i.getName().equals(name)) return i;
-        }
-        return null;
-    }
-
-    public ArrayList<Item> getItems(){
-        return items;
+    public Item findByName(String name) throws Exception {
+        return repo.getItemByName(name);
     }
 }
