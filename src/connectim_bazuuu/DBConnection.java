@@ -5,26 +5,27 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBConnection {
+    private static DBConnection instance;
     private Connection connection;
 
-    public Connection getConnection() throws Exception {
-        if (connection != null && !connection.isClosed()) {
-            return connection;
-        }
-
+    private DBConnection() throws Exception {
         String url = "jdbc:postgresql://localhost:5432/school_order";
         String user = "postgres";
         String password = "0000";
+
         Class.forName("org.postgresql.Driver");
-
-        return DriverManager.getConnection(url, user, password);
+        connection = DriverManager.getConnection(url, user, password);
     }
 
-    public void close() throws SQLException {
-        if (connection == null || connection.isClosed()) {
-            return;
+    public static DBConnection getInstance() throws Exception {
+        if (instance == null) {
+            instance = new DBConnection();
         }
-
-        connection.close();
+        return instance;
     }
+
+    public Connection getConnection() {
+        return connection;
+    }
+
 }
