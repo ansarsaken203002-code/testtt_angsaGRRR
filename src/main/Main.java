@@ -15,7 +15,7 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            DBConnection conn = new DBConnection();
+            DBConnection conn = DBConnection.getInstance();
             ItemRepository itemRepo = new ItemRepository(conn);
             ItemService itemService = new ItemService(itemRepo);
 
