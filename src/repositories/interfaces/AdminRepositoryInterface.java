@@ -9,3 +9,4 @@ public interface AdminRepositoryInterface {
     void createAdmin(Admin admin) throws Exception;
     List<Admin> getAllAdmins() throws Exception;
 }
+//каммит не работает
